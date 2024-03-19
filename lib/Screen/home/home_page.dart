@@ -112,7 +112,10 @@ class _HomePageState extends State<HomePage> {
                                 Get.to(
                                   UserUpdateDataPage(
                                       userData: snapshot.data[index]),
-                                );
+                                )!
+                                    .then((value) => setState(() {
+                                          item;
+                                        }));
                               } else if (direction ==
                                   DismissDirection.endToStart) {
                                 //! Delete the UserDetails Based His Id

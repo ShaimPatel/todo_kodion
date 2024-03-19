@@ -18,13 +18,15 @@ class UserUpdateController extends GetxController {
   RxBool isChecked = false.obs;
 
   //! Get UserDetails
-  getUserDetails(userData) {
+  getUserDetails(userData) async {
+    String userSkillsAsString = userData['userSkills'];
+    List<dynamic> userSkillsList = userSkillsAsString.split(',');
     nameController.value.text = userData['userName'];
     emailController.value.text = userData['userEmail'];
     numberController.value.text = userData['userNumber'];
     dropdownvalue!.value = userData['userGender'];
-    selectedItemData.value = userData['userSkills'];
-    print(selectedItemData.value);
+    selectedItem.value = userSkillsList;
+    print(selectedItem.value);
   }
 
   //?

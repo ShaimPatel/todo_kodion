@@ -6,6 +6,7 @@ import 'package:kodion_projects/Common%20widget/custome_textFeaild.dart';
 import 'package:kodion_projects/Custom%20Page/my_custom_clipper1.dart';
 import 'package:kodion_projects/Custom%20Page/my_custom_clipper2.dart';
 import 'package:kodion_projects/DataBase/database_helper.dart';
+import 'package:kodion_projects/Screen/profile/add/controller/add_user_provider.dart';
 import 'package:kodion_projects/Screen/profile/add/controller/user_skills_provider.dart';
 import 'package:kodion_projects/Screen/profile/update/Controller/user_update_controller.dart';
 
@@ -20,6 +21,7 @@ class UserUpdateDataPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final updateController = Get.put(UserUpdateController());
+    final addController = Get.put(AddUserController());
     updateController.getUserDetails(userData);
     print(userData["userSkills"]);
     return Scaffold(
@@ -198,36 +200,41 @@ class UserUpdateDataPage extends StatelessWidget {
                               fontSize: 14, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 5),
-                        InkWell(
+                        Obx(
+                          () => InkWell(
                             onTap: () {
                               updateController.showMultiSelect();
                             },
-                            child: Obx(
-                              () => Container(
-                                padding: const EdgeInsets.all(20.0),
-
-                                // height: 50,
-                                width: double.maxFinite,
-                                decoration: BoxDecoration(
-                                    color: const Color(0xFFB394C9),
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(
-                                        color: Colors.black87, width: 1)),
-                                child: Wrap(
-                                  children: updateController.selectedItem
-                                      .map(
-                                        (e) => Chip(
-                                          label: Text(e),
-                                          onDeleted: () {
-                                            updateController.selectedItem
-                                                .remove(e);
-                                          },
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
+                            child: Container(
+                              padding: updateController.selectedItem.isEmpty
+                                  ? const EdgeInsets.all(25.0)
+                                  : const EdgeInsets.symmetric(horizontal: 5),
+                              // height: 50,
+                              width: double.maxFinite,
+                              decoration: BoxDecoration(
+                                  color: const Color(0xFFB394C9),
+                                  borderRadius: BorderRadius.circular(5),
+                                  border: Border.all(
+                                      color: Colors.black87, width: 1)),
+                              child: Wrap(
+                                spacing: 10,
+                                children: updateController.selectedItem.value
+                                    .map(
+                                      (e) => Chip(
+                                        deleteButtonTooltipMessage:
+                                            "Remove skills",
+                                        label: Text(e),
+                                        onDeleted: () {
+                                          updateController.selectedItem
+                                              .remove(e);
+                                        },
+                                      ),
+                                    )
+                                    .toList(),
                               ),
-                            )),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ],
