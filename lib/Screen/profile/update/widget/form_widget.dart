@@ -74,17 +74,50 @@ class FromWidegtPage extends StatelessWidget {
               },
             ),
             //! Number
-            CustomTextField(
-              labelName: 'Number',
-              textEditingController: updateController.numberController.value,
-              inputType: TextInputType.number,
-              prefixIcon: const Icon(Icons.phone),
-              textInputAction: TextInputAction.next,
-              customValidate: (text) {
-                if (text.isEmpty) {
-                  return "Enter your number";
-                }
-              },
+            // CustomTextField(
+            //   labelName: 'Number',
+            //   textEditingController: updateController.numberController.value,
+            //   inputType: TextInputType.number,
+            //   prefixIcon: const Icon(Icons.phone),
+            //   textInputAction: TextInputAction.next,
+            //   customValidate: (text) {
+            //     if (text.isEmpty) {
+            //       return "Enter your number";
+            //     }
+            //   },
+            // ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Phone number",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                TextFormField(
+                  style: const TextStyle(fontSize: 14),
+                  textInputAction: TextInputAction.next,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  controller: updateController.numberController.value,
+                  keyboardType: TextInputType.text,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Enter your number";
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.phone),
+                    filled: true,
+                    fillColor: Color(0xFFB394C9),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 5),
+              ],
             ),
             //!Gender
             Column(
@@ -95,46 +128,42 @@ class FromWidegtPage extends StatelessWidget {
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 5),
-                Obx(
-                  () => Container(
-                    height: 55,
-                    width: double.maxFinite,
-                    decoration: BoxDecoration(
-                        color: const Color(0xFFB394C9),
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Colors.black87, width: 1)),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.male),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: DropdownButton(
-                                isExpanded: true,
-                                underline: const SizedBox(),
-                                value: updateController
-                                        .dropdownvalue!.value.isEmpty
-                                    ? null
-                                    : updateController.dropdownvalue!.value,
-                                items:
-                                    updateController.genderList.map((element) {
+                Container(
+                  height: 55,
+                  width: double.maxFinite,
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFB394C9),
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.black87, width: 1)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.male),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: DropdownButton(
+                              isExpanded: true,
+                              underline: const SizedBox(),
+                              value: updateController.dropdownvalue!.value,
+                              items: [
+                                ...updateController.genderList.map((element) {
                                   return DropdownMenuItem(
                                       enabled: true,
                                       value: element,
                                       child: Text(element.toString()));
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  updateController.dropdownvalue!.value =
-                                      newValue.toString();
                                 }),
-                          ),
-                        ],
-                      ),
+                              ],
+                              onChanged: (newValue) {
+                                updateController.dropdownvalue!.value =
+                                    newValue.toString();
+                              }),
+                        ),
+                      ],
                     ),
                   ),
-                )
+                ),
               ],
             ),
 

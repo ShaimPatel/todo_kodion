@@ -5,70 +5,22 @@ import 'package:kodion_projects/Custom%20Page/my_custom_clipper1.dart';
 import 'package:kodion_projects/Custom%20Page/my_custom_clipper2.dart';
 import 'package:kodion_projects/DataBase/database_helper.dart';
 import 'package:kodion_projects/Screen/profile/add/controller/add_user_provider.dart';
+import 'package:kodion_projects/Screen/profile/add/widget/custom_page.dart';
 
 class RegisterationPage extends StatelessWidget {
-  const RegisterationPage({super.key});
+  var userData;
+  RegisterationPage({super.key, required this.userData});
+
+  final controller = Get.put(AddUserController());
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(AddUserController());
+    userData == null ? null : controller.getUserDetails(userData);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Stack(
-              children: [
-                //todo : 1st Clipper
-                ClipPath(
-                  clipper: MyCustomClipper(),
-                  child: Container(
-                    height: 200,
-                    width: double.maxFinite,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFB394C9),
-                    ),
-                  ),
-                ),
-                //todo : 2st Clipper
-
-                ClipPath(
-                  clipper: MyCustomClipper2(),
-                  child: Container(
-                    height: 160,
-                    width: double.maxFinite,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF49545F),
-                    ),
-                  ),
-                ),
-
-                //todo : 3 BackButton
-
-                Positioned(
-                    left: 20,
-                    top: 50,
-                    child: InkWell(
-                      onTap: () {
-                        Get.back();
-                      },
-                      child: const Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    )),
-
-                //todo : Text
-                Positioned(
-                    right: 20,
-                    top: MediaQuery.of(context).size.height * 0.20,
-                    child: const Text("Add Profile",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        )))
-              ],
-            ),
+            CustomPage(userData: userData),
             const SizedBox(height: 15),
             //! Input Fields
             Padding(
@@ -145,9 +97,17 @@ class RegisterationPage extends StatelessWidget {
                                     const Icon(Icons.male),
                                     const SizedBox(width: 10),
                                     Expanded(
-                                      child: DropdownButton(
+                                      child: DropdownButtonFormField(
                                           isExpanded: true,
-                                          underline: const SizedBox(),
+                                          autovalidateMode:
+                                              AutovalidateMode.always,
+                                          isDense: true,
+                                          // underline: const SizedBox(),
+                                          validator: (String? value) {
+                                            return value == null
+                                                ? "Choose item from list"
+                                                : null;
+                                          },
                                           value: controller
                                                   .dropdownvalueaddUser!
                                                   .value
@@ -243,30 +203,44 @@ class RegisterationPage extends StatelessWidget {
                   ),
                   onPressed: () async {
                     if (controller.globalKeyAddUser.currentState!.validate()) {
-                      await DataBaseHelper.dataBaseHelper.insert({
-                        DataBaseHelper.userName:
-                            controller.nameAddController.value.text,
-                        DataBaseHelper.userEmail:
-                            controller.emailAddController.value.text,
-                        DataBaseHelper.userNumber: controller
-                            .numberAddController.value.text
-                            .toString(),
-                        DataBaseHelper.userGender:
-                            controller.dropdownvalueaddUser!.value,
-                        DataBaseHelper.userSkills:
-                            controller.selectedItemAddUser.join(','),
-                      });
+                      userData == null
+                          ? await DataBaseHelper.dataBaseHelper.insert({
+                              DataBaseHelper.userName:
+                                  controller.nameAddController.value.text,
+                              DataBaseHelper.userEmail:
+                                  controller.emailAddController.value.text,
+                              DataBaseHelper.userNumber: controller
+                                  .numberAddController.value.text
+                                  .toString(),
+                              DataBaseHelper.userGender:
+                                  controller.dropdownvalueaddUser!.value,
+                              DataBaseHelper.userSkills:
+                                  controller.selectedItemAddUser.join(','),
+                            })
+                          : await DataBaseHelper.dataBaseHelper
+                              .updateUserDetails({
+                              DataBaseHelper.userName:
+                                  controller.nameAddController.value.text,
+                              DataBaseHelper.userEmail:
+                                  controller.emailAddController.value.text,
+                              DataBaseHelper.userNumber: controller
+                                  .numberAddController.value.text
+                                  .toString(),
+                              DataBaseHelper.userGender:
+                                  controller.dropdownvalueaddUser!.value,
+                              DataBaseHelper.userSkills:
+                                  controller.selectedItemAddUser.join(',')
+                            }, userData['id']);
 
-                      controller.nameAddController.value.clear();
-                      controller.emailAddController.value.clear();
-                      controller.numberAddController.value.clear();
                       Get.back();
                       Get.snackbar("User Successfully registered", "",
                           backgroundColor: Colors.green.shade100);
                     }
                   },
                   child: Text(
-                    "Submit".toUpperCase(),
+                    userData == null
+                        ? "Submit".toUpperCase()
+                        : "Update".toUpperCase(),
                     style: const TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),

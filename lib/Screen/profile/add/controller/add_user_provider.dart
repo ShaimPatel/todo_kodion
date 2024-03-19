@@ -14,6 +14,18 @@ class AddUserController extends GetxController {
   RxString? dropdownvalueaddUser = ''.obs;
 
   RxList selectedItemAddUser = [].obs;
+  RxList selectedItem = [].obs;
+
+  getUserDetails(userData) async {
+    String userSkillsAsString = userData['userSkills'];
+    List<dynamic> userSkillsList = userSkillsAsString.split(',');
+    nameAddController.value.text = userData['userName'];
+    emailAddController.value.text = userData['userEmail'];
+    numberAddController.value.text = userData['userNumber'];
+    dropdownvalueaddUser!.value = userData['userGender'];
+    selectedItemAddUser.value = userSkillsList;
+    print(selectedItemAddUser.value);
+  }
 
 //! For adding the Value or removing the value ..
   void itemChange(RxString itemValue, RxBool isSelected) {
@@ -46,7 +58,7 @@ class AddUserController extends GetxController {
         });
     if (results != null) {
       print("results : $results");
-      selectedItemAddUser.value = results;
+      selectedItem.value = results;
     }
   }
 }
