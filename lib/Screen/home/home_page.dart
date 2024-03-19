@@ -109,12 +109,15 @@ class _HomePageState extends State<HomePage> {
                             onDismissed: (direction) async {
                               if (direction == DismissDirection.startToEnd) {
                                 Get.snackbar("Edit", "message");
-                                Get.to(
+                                await Get.to(
                                   UserUpdateDataPage(
                                       userData: snapshot.data[index]),
                                 )!
                                     .then((value) => setState(() {
-                                          item;
+                                          userListData = DataBaseHelper
+                                              .dataBaseHelper
+                                              .fetchUser();
+                                          item = userListData;
                                         }));
                               } else if (direction ==
                                   DismissDirection.endToStart) {

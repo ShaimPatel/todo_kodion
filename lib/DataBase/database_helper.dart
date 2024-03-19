@@ -101,6 +101,16 @@ class DataBaseHelper {
     return await db
         .delete(_tableName, where: "$id = ? ", whereArgs: [userDeletID]);
   }
+
+//! Update User Details
+  Future updateUserDetails(
+      Map<String, dynamic> userData, int userUpdateID) async {
+    var db = await dataBaseHelper.getDatabase;
+    print("userData : $userData");
+    print("userUpdateID : $userUpdateID");
+    return await db.update(_tableName, userData,
+        where: '$id = ?', whereArgs: [userUpdateID]);
+  }
 }
 
 GlobalKey<NavigatorState> navigationKey = GlobalKey<NavigatorState>();

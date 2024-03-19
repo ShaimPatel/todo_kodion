@@ -74,14 +74,14 @@ class RegisterationPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: Form(
-                key: controller.globalKey,
+                key: controller.globalKeyAddUser,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     //! Name
                     CustomTextField(
                       labelName: 'Name',
-                      textEditingController: controller.nameController.value,
+                      textEditingController: controller.nameAddController.value,
                       inputType: TextInputType.text,
                       prefixIcon: const Icon(Icons.person),
                       textInputAction: TextInputAction.next,
@@ -94,7 +94,8 @@ class RegisterationPage extends StatelessWidget {
                     //! Email
                     CustomTextField(
                       labelName: 'Email',
-                      textEditingController: controller.emailController.value,
+                      textEditingController:
+                          controller.emailAddController.value,
                       inputType: TextInputType.emailAddress,
                       prefixIcon: const Icon(Icons.mail),
                       textInputAction: TextInputAction.next,
@@ -107,7 +108,8 @@ class RegisterationPage extends StatelessWidget {
                     //! Number
                     CustomTextField(
                       labelName: 'Number',
-                      textEditingController: controller.numberController.value,
+                      textEditingController:
+                          controller.numberAddController.value,
                       inputType: TextInputType.number,
                       prefixIcon: const Icon(Icons.phone),
                       textInputAction: TextInputAction.done,
@@ -147,11 +149,14 @@ class RegisterationPage extends StatelessWidget {
                                           isExpanded: true,
                                           underline: const SizedBox(),
                                           value: controller
-                                                  .dropdownvalue!.value.isEmpty
+                                                  .dropdownvalueaddUser!
+                                                  .value
+                                                  .isEmpty
                                               ? null
-                                              : controller.dropdownvalue!.value,
+                                              : controller
+                                                  .dropdownvalueaddUser!.value,
                                           items: [
-                                            ...controller.genderList
+                                            ...controller.addUsergenderList
                                                 .map((element) {
                                               return DropdownMenuItem(
                                                   enabled: true,
@@ -161,8 +166,8 @@ class RegisterationPage extends StatelessWidget {
                                             }),
                                           ],
                                           onChanged: (newValue) {
-                                            controller.dropdownvalue!.value =
-                                                newValue.toString();
+                                            controller.dropdownvalueaddUser!
+                                                .value = newValue.toString();
                                           }),
                                     ),
                                   ],
@@ -190,7 +195,7 @@ class RegisterationPage extends StatelessWidget {
                               controller.showMultiSelect();
                             },
                             child: Container(
-                              padding: controller.selectedItem.isEmpty
+                              padding: controller.selectedItemAddUser.isEmpty
                                   ? const EdgeInsets.all(25.0)
                                   : const EdgeInsets.symmetric(horizontal: 5),
                               // height: 50,
@@ -202,14 +207,15 @@ class RegisterationPage extends StatelessWidget {
                                       color: Colors.black87, width: 1)),
                               child: Wrap(
                                 spacing: 10,
-                                children: controller.selectedItem.value
+                                children: controller.selectedItemAddUser.value
                                     .map(
                                       (e) => Chip(
                                         deleteButtonTooltipMessage:
                                             "Remove skills",
                                         label: Text(e),
                                         onDeleted: () {
-                                          controller.selectedItem.remove(e);
+                                          controller.selectedItemAddUser
+                                              .remove(e);
                                         },
                                       ),
                                     )
@@ -236,23 +242,24 @@ class RegisterationPage extends StatelessWidget {
                     backgroundColor: const Color(0xFF49545F),
                   ),
                   onPressed: () async {
-                    if (controller.globalKey.currentState!.validate()) {
+                    if (controller.globalKeyAddUser.currentState!.validate()) {
                       await DataBaseHelper.dataBaseHelper.insert({
                         DataBaseHelper.userName:
-                            controller.nameController.value.text,
+                            controller.nameAddController.value.text,
                         DataBaseHelper.userEmail:
-                            controller.emailController.value.text,
-                        DataBaseHelper.userNumber:
-                            controller.numberController.value.text.toString(),
+                            controller.emailAddController.value.text,
+                        DataBaseHelper.userNumber: controller
+                            .numberAddController.value.text
+                            .toString(),
                         DataBaseHelper.userGender:
-                            controller.dropdownvalue!.value,
+                            controller.dropdownvalueaddUser!.value,
                         DataBaseHelper.userSkills:
-                            controller.selectedItem.join(','),
+                            controller.selectedItemAddUser.join(','),
                       });
 
-                      controller.nameController.value.clear();
-                      controller.emailController.value.clear();
-                      controller.numberController.value.clear();
+                      controller.nameAddController.value.clear();
+                      controller.emailAddController.value.clear();
+                      controller.numberAddController.value.clear();
                       Get.back();
                       Get.snackbar("User Successfully registered", "",
                           backgroundColor: Colors.green.shade100);

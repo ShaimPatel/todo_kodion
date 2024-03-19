@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kodion_projects/DataBase/database_helper.dart';
-import 'package:kodion_projects/Screen/profile/add/widget/multiselect_widegt.dart';
 import 'dart:developer' as developer;
+
+import 'package:kodion_projects/Screen/profile/update/widget/skills_checkBox_widget.dart';
 
 class UserUpdateController extends GetxController {
   Rx<TextEditingController> nameController = TextEditingController().obs;
@@ -16,6 +17,7 @@ class UserUpdateController extends GetxController {
   RxList selectedItemData = [].obs;
 
   RxBool isChecked = false.obs;
+  RxBool isClicked = false.obs;
 
   //! Get UserDetails
   getUserDetails(userData) async {
@@ -28,8 +30,6 @@ class UserUpdateController extends GetxController {
     selectedItem.value = userSkillsList;
     print(selectedItem.value);
   }
-
-  //?
 
 //! For adding the Value or removing the value ..
   void itemChange(RxString itemValue, RxBool isSelected) {
@@ -58,7 +58,7 @@ class UserUpdateController extends GetxController {
     final RxList? results = await showDialog(
         context: navigationKey.currentState!.context,
         builder: (BuildContext context) {
-          return MultiSelectWidget(items: skillsList);
+          return SkillsCheckBoxWidget(items: skillsList);
         });
     if (results != null) {
       selectedItemData.value = results;
