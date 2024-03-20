@@ -1,8 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
-import 'package:kodion_projects/Screen/profile/add/controller/add_user_provider.dart';
+import 'package:kodion_projects/Screen/Profile/add_update_profile/controller/add_update_profile_provider.dart';
 
 class MultiSelectWidget extends StatelessWidget {
   RxList<String> items;
@@ -13,15 +12,14 @@ class MultiSelectWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final skillController = Get.put(AddUserController());
+    final skillController = Get.put(AddUpdateUserProfileController());
     return Obx(() => AlertDialog(
           title: const Text("Select Skills"),
           content: SingleChildScrollView(
             child: ListBody(
               children: items.value
                   .map((item) => CheckboxListTile(
-                        value:
-                            skillController.selectedItemAddUser.contains(item),
+                        value: skillController.selectedItemData.contains(item),
                         title: Text(item.toString()),
                         controlAffinity: ListTileControlAffinity.trailing,
                         onChanged: (isChecked) => skillController.itemChange(

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kodion_projects/DataBase/database_helper.dart';
 import 'dart:developer' as developer;
 
-import 'package:kodion_projects/Screen/profile/update/widget/skills_checkBox_widget.dart';
+import 'package:kodion_projects/Common/global_data.dart';
+import 'package:kodion_projects/Screen/Profile/add_update_profile/widget/multiselect_widegt.dart';
 
-class UserUpdateController extends GetxController {
+class AddUpdateUserProfileController extends GetxController {
   Rx<TextEditingController> nameController = TextEditingController().obs;
   Rx<TextEditingController> emailController = TextEditingController().obs;
   Rx<TextEditingController> numberController = TextEditingController().obs;
@@ -13,13 +13,12 @@ class UserUpdateController extends GetxController {
 
   RxList<String> genderList = ['Male', "Female", "Other"].obs;
   RxString? dropdownvalue = ''.obs;
-  RxList selectedItem = [].obs;
+
   RxList selectedItemData = [].obs;
+  RxList selectedItem = [].obs;
 
-  RxBool isChecked = false.obs;
-  RxBool isClicked = false.obs;
+  RxBool isSkillsSelected = false.obs;
 
-  //! Get UserDetails
   getUserDetails(userData) async {
     String userSkillsAsString = userData['userSkills'];
     List<dynamic> userSkillsList = userSkillsAsString.split(',');
@@ -27,17 +26,17 @@ class UserUpdateController extends GetxController {
     emailController.value.text = userData['userEmail'];
     numberController.value.text = userData['userNumber'];
     dropdownvalue!.value = userData['userGender'];
-    selectedItem.value = userSkillsList;
-    print(selectedItem.value);
+    selectedItemData.value = userSkillsList;
+    print(selectedItemData.value);
   }
 
 //! For adding the Value or removing the value ..
   void itemChange(RxString itemValue, RxBool isSelected) {
     print("Itemdata:: $itemValue");
     if (isSelected.value) {
-      selectedItem.add(itemValue.value);
+      selectedItemData.add(itemValue.value);
     } else {
-      selectedItem.remove(itemValue.value);
+      selectedItemData.remove(itemValue.value);
     }
   }
 
@@ -46,9 +45,9 @@ class UserUpdateController extends GetxController {
   }
 
   void addData() {
-    Get.back(result: selectedItem);
-    developer.log(selectedItem.toString());
-    print(selectedItem.toString());
+    Get.back(result: selectedItemData);
+    developer.log(selectedItemData.toString());
+    print(selectedItemData.toString());
   }
 
   showMultiSelect() async {
@@ -56,12 +55,13 @@ class UserUpdateController extends GetxController {
         ['Java', 'Flutter', 'Kotlin', '.Net', 'Php', 'Angular', 'Node.js'].obs;
 
     final RxList? results = await showDialog(
-        context: navigationKey.currentState!.context,
+        context: GlobalData.navigatorStateKey.currentState!.context,
         builder: (BuildContext context) {
-          return SkillsCheckBoxWidget(items: skillsList);
+          return MultiSelectWidget(items: skillsList);
         });
     if (results != null) {
-      selectedItemData.value = results;
+      print("results : $results");
+      selectedItem.value = results;
     }
   }
 }

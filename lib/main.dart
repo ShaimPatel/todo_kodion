@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kodion_projects/DataBase/database_helper.dart';
+import 'package:kodion_projects/Common/global_data.dart';
 import 'package:kodion_projects/Screen/home/home_page.dart';
 
 void main() {
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const HomePage(),
-      navigatorKey: navigationKey,
+      navigatorKey: GlobalData.navigatorStateKey,
     );
   }
 }
