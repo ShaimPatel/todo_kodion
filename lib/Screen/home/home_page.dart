@@ -113,6 +113,77 @@ class _HomePageState extends State<HomePage> {
                           itemBuilder: (context, index) {
                             return Dismissible(
                                 key: UniqueKey(),
+                                confirmDismiss: (direction) async {
+                                  if (direction ==
+                                      DismissDirection.endToStart) {
+                                    showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (_) {
+                                          return AlertDialog(
+                                            content: const Text(
+                                                "Are you sure you want to delete this data ?"),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () async {
+                                                    await DataBaseHelper
+                                                        .dataBaseHelper
+                                                        .deleteUser(int.parse(
+                                                            snapshot.data[index]
+                                                                    ['id']
+                                                                .toString()))
+                                                        .then((value) =>
+                                                            setState(() {
+                                                              userListData =
+                                                                  DataBaseHelper
+                                                                      .dataBaseHelper
+                                                                      .fetchUser();
+                                                              item =
+                                                                  userListData;
+                                                            }));
+                                                    Get.back();
+                                                    Get.snackbar("User Details",
+                                                        "${snapshot.data[index]['id'].toString()} Deleted successfully",
+                                                        backgroundColor: Colors
+                                                            .green.shade50);
+                                                  },
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          WidgetStateProperty
+                                                              .all<Color>(Colors
+                                                                  .green)),
+                                                  child: const Text(
+                                                    "Yes",
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  )),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Get.back();
+                                                  },
+                                                  style: ButtonStyle(
+                                                      backgroundColor:
+                                                          WidgetStateProperty
+                                                              .all<Color>(
+                                                                  Colors.red)),
+                                                  child: const Text(
+                                                    "No",
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  )),
+                                            ],
+                                            title: const Text(
+                                              "Delete User Data ",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            elevation: 2.0,
+                                          );
+                                        });
+                                  }
+                                  return null;
+                                },
                                 onDismissed: (direction) async {
                                   if (direction ==
                                       DismissDirection.startToEnd) {
@@ -136,23 +207,24 @@ class _HomePageState extends State<HomePage> {
                                       controller.selectedItem.clear();
                                       controller.dropdownvalue!.value = '';
                                     });
-                                  } else if (direction ==
-                                      DismissDirection.endToStart) {
-                                    //! Delete the UserDetails Based His Id
-                                    await DataBaseHelper.dataBaseHelper
-                                        .deleteUser(int.parse(snapshot
-                                            .data[index]['id']
-                                            .toString()))
-                                        .then((value) => setState(() {
-                                              userListData = DataBaseHelper
-                                                  .dataBaseHelper
-                                                  .fetchUser();
-                                              item = userListData;
-                                            }));
-                                    Get.snackbar("User Details",
-                                        "${snapshot.data[index]['id'].toString()} Deleted successfully",
-                                        backgroundColor: Colors.green.shade50);
                                   }
+                                  // else if (direction ==
+                                  //     DismissDirection.endToStart) {
+                                  //   //! Delete the UserDetails Based His Id
+                                  //   await DataBaseHelper.dataBaseHelper
+                                  //       .deleteUser(int.parse(snapshot
+                                  //           .data[index]['id']
+                                  //           .toString()))
+                                  //       .then((value) => setState(() {
+                                  //             userListData = DataBaseHelper
+                                  //                 .dataBaseHelper
+                                  //                 .fetchUser();
+                                  //             item = userListData;
+                                  //           }));
+                                  //   Get.snackbar("User Details",
+                                  //       "${snapshot.data[index]['id'].toString()} Deleted successfully",
+                                  //       backgroundColor: Colors.green.shade50);
+                                  // }
                                 },
                                 behavior: HitTestBehavior.opaque,
                                 secondaryBackground: Container(

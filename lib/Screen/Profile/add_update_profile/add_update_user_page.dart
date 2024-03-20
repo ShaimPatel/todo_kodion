@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:kodion_projects/Screen/DataBase/database_helper.dart';
 import 'package:kodion_projects/Screen/Profile/add_update_profile/controller/add_update_profile_provider.dart';
 import 'package:kodion_projects/Screen/Profile/add_update_profile/widget/form_wudget.dart';
@@ -7,7 +8,10 @@ import 'package:kodion_projects/Screen/Profile/add_update_profile/widget/stack_w
 
 class AddUpdateUserProfilePage extends StatelessWidget {
   var userData;
-  AddUpdateUserProfilePage({super.key, required this.userData});
+  AddUpdateUserProfilePage({
+    super.key,
+    required this.userData,
+  });
 
   final controller = Get.put(AddUpdateUserProfileController());
 
