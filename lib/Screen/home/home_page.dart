@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kodion_projects/Common/widget/error_page.dart';
 import 'package:kodion_projects/Screen/DataBase/database_helper.dart';
 import 'package:kodion_projects/Screen/Home/Controller/home_provider.dart';
 import 'package:kodion_projects/Screen/Home/Widget/user_card_widget.dart';
@@ -103,8 +104,11 @@ class _HomePageState extends State<HomePage> {
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
-                  return userListData != null
-                      ? ListView.builder(
+                  print("Snapshot Data :: ${snapshot.hasData}");
+
+                  return snapshot.data.isEmpty
+                      ? const ErrorPage()
+                      : ListView.builder(
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
                             return Dismissible(
@@ -130,9 +134,7 @@ class _HomePageState extends State<HomePage> {
                                       controller.emailController.value.clear();
                                       controller.numberController.value.clear();
                                       controller.selectedItem.clear();
-                                      var d =
-                                          controller.dropdownvalue!.value = '';
-                                      print("orF Clear :: $d");
+                                      controller.dropdownvalue!.value = '';
                                     });
                                   } else if (direction ==
                                       DismissDirection.endToStart) {
@@ -140,7 +142,13 @@ class _HomePageState extends State<HomePage> {
                                     await DataBaseHelper.dataBaseHelper
                                         .deleteUser(int.parse(snapshot
                                             .data[index]['id']
-                                            .toString()));
+                                            .toString()))
+                                        .then((value) => setState(() {
+                                              userListData = DataBaseHelper
+                                                  .dataBaseHelper
+                                                  .fetchUser();
+                                              item = userListData;
+                                            }));
                                     Get.snackbar("User Details",
                                         "${snapshot.data[index]['id'].toString()} Deleted successfully",
                                         backgroundColor: Colors.green.shade50);
@@ -184,17 +192,12 @@ class _HomePageState extends State<HomePage> {
                                       .toString()
                                       .capitalize,
                                 ));
-                          })
-                      : const Expanded(
-                          child: Center(
-                            child: Text("No user data found"),
-                          ),
-                        );
+                          });
                 } else if (snapshot.hasError) {
-                  return const Text("Error Occure");
+                  return const Expanded(child: Text("Error Occure"));
                 } else {
                   return const Center(
-                    child: Text("Loading Field"),
+                    child: Expanded(child: Text("Loading Data")),
                   );
                 }
               } else if (snapshot.connectionState == ConnectionState.waiting) {
@@ -205,7 +208,7 @@ class _HomePageState extends State<HomePage> {
                 return const Text("No Record");
               }
             },
-          )),
+          ))
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(

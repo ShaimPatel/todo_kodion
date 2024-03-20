@@ -9,7 +9,7 @@ class AddUpdateUserProfileController extends GetxController {
   Rx<TextEditingController> nameController = TextEditingController().obs;
   Rx<TextEditingController> emailController = TextEditingController().obs;
   Rx<TextEditingController> numberController = TextEditingController().obs;
-  GlobalKey<FormState> globalKey = GlobalKey();
+  GlobalKey<FormState> globalKey = GlobalKey<FormState>();
 
   RxList<String> genderList = ['Male', "Female", "Other"].obs;
   RxString? dropdownvalue = ''.obs;
@@ -18,6 +18,7 @@ class AddUpdateUserProfileController extends GetxController {
   RxList selectedItem = [].obs;
 
   RxBool isSkillsSelected = false.obs;
+  RxBool isButtonClicked = false.obs;
 
   getUserDetails(userData) async {
     String userSkillsAsString = userData['userSkills'];
@@ -41,6 +42,7 @@ class AddUpdateUserProfileController extends GetxController {
   }
 
   void cancleItem() {
+    selectedItemData.clear();
     Get.back();
   }
 
@@ -55,6 +57,7 @@ class AddUpdateUserProfileController extends GetxController {
         ['Java', 'Flutter', 'Kotlin', '.Net', 'Php', 'Angular', 'Node.js'].obs;
 
     final RxList? results = await showDialog(
+        barrierDismissible: false,
         context: GlobalData.navigatorStateKey.currentState!.context,
         builder: (BuildContext context) {
           return MultiSelectWidget(items: skillsList);
@@ -63,5 +66,18 @@ class AddUpdateUserProfileController extends GetxController {
       print("results : $results");
       selectedItem.value = results;
     }
+  }
+
+  //! For Submit button
+
+  void updateAddButtonBoolValue() {
+    isButtonClicked.value = true;
+    Future.delayed(
+      const Duration(seconds: 2),
+    ).then((onValue) {
+      {
+        isButtonClicked.value = false;
+      }
+    });
   }
 }

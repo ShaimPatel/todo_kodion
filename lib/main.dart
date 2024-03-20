@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kodion_projects/Common/global_data.dart';
-import 'package:kodion_projects/Screen/home/home_page.dart';
+import 'package:kodion_projects/Screen/Home/home_page.dart';
 
 void main() {
   runApp(const MyApp());

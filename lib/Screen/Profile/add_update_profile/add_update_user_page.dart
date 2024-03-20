@@ -24,56 +24,68 @@ class AddUpdateUserProfilePage extends StatelessWidget {
             FormWidget(),
             const SizedBox(height: 20),
             //todo:  Button Section
-            SizedBox(
-              width: Get.width * 0.6,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF49545F),
-                ),
-                onPressed: () async {
-                  if (controller.globalKey.currentState!.validate()) {
-                    userData == null
-                        ? await DataBaseHelper.dataBaseHelper.insert({
-                            DataBaseHelper.userName:
-                                controller.nameController.value.text,
-                            DataBaseHelper.userEmail:
-                                controller.emailController.value.text,
-                            DataBaseHelper.userNumber: controller
-                                .numberController.value.text
-                                .toString(),
-                            DataBaseHelper.userGender:
-                                controller.dropdownvalue!.value,
-                            DataBaseHelper.userSkills:
-                                controller.selectedItem.join(','),
-                          })
-                        : await DataBaseHelper.dataBaseHelper
-                            .updateUserDetails({
-                            DataBaseHelper.userName:
-                                controller.nameController.value.text,
-                            DataBaseHelper.userEmail:
-                                controller.emailController.value.text,
-                            DataBaseHelper.userNumber: controller
-                                .numberController.value.text
-                                .toString(),
-                            DataBaseHelper.userGender:
-                                controller.dropdownvalue!.value,
-                            DataBaseHelper.userSkills:
-                                controller.selectedItem.join(',')
-                          }, userData['id']);
+            Obx(() => controller.isButtonClicked.value == false
+                ? SizedBox(
+                    width: Get.width * 0.6,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF49545F),
+                      ),
+                      onPressed: () async {
+                        controller.updateAddButtonBoolValue();
+                        if (controller.selectedItemData.isEmpty) {
+                          controller.isSkillsSelected.value = true;
+                        }
+                        if (controller.globalKey.currentState!.validate() &&
+                            controller.selectedItemData.isNotEmpty) {
+                          controller.isSkillsSelected.value = false;
+                          userData == null
+                              ? await DataBaseHelper.dataBaseHelper.insert({
+                                  DataBaseHelper.userName: controller
+                                      .nameController.value.text
+                                      .trim(),
+                                  DataBaseHelper.userEmail:
+                                      controller.emailController.value.text,
+                                  DataBaseHelper.userNumber: controller
+                                      .numberController.value.text
+                                      .toString(),
+                                  DataBaseHelper.userGender:
+                                      controller.dropdownvalue.toString(),
+                                  DataBaseHelper.userSkills:
+                                      controller.selectedItem.join(','),
+                                })
+                              : await DataBaseHelper.dataBaseHelper
+                                  .updateUserDetails({
+                                  DataBaseHelper.userName:
+                                      controller.nameController.value.text,
+                                  DataBaseHelper.userEmail:
+                                      controller.emailController.value.text,
+                                  DataBaseHelper.userNumber: controller
+                                      .numberController.value.text
+                                      .toString(),
+                                  DataBaseHelper.userGender:
+                                      controller.dropdownvalue.toString(),
+                                  DataBaseHelper.userSkills:
+                                      controller.selectedItem.join(',')
+                                }, userData['id']);
 
-                    Get.back();
-                    Get.snackbar("User Successfully registered", "",
-                        backgroundColor: Colors.green.shade100);
-                  }
-                },
-                child: Text(
-                  userData == null
-                      ? "Submit".toUpperCase()
-                      : "Update".toUpperCase(),
-                  style: const TextStyle(fontSize: 16, color: Colors.white),
-                ),
-              ),
-            ),
+                          Get.back();
+                          Get.snackbar("User Updated Successfully", "",
+                              backgroundColor: Colors.green.shade100);
+                        }
+                      },
+                      child: Text(
+                        userData == null
+                            ? "Submit".toUpperCase()
+                            : "Update".toUpperCase(),
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    ),
+                  )
+                : const Center(
+                    child: CircularProgressIndicator(),
+                  ))
           ],
         ),
       ),
