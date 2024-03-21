@@ -105,7 +105,6 @@ class _HomePageState extends State<HomePage> {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
                   print("Snapshot Data :: ${snapshot.hasData}");
-
                   return snapshot.data.isEmpty
                       ? const ErrorPage()
                       : ListView.builder(
@@ -181,11 +180,7 @@ class _HomePageState extends State<HomePage> {
                                             elevation: 2.0,
                                           );
                                         });
-                                  }
-                                  return null;
-                                },
-                                onDismissed: (direction) async {
-                                  if (direction ==
+                                  } else if (direction ==
                                       DismissDirection.startToEnd) {
                                     Get.to(
                                       AddUpdateUserProfilePage(
@@ -208,6 +203,9 @@ class _HomePageState extends State<HomePage> {
                                       controller.dropdownvalue!.value = '';
                                     });
                                   }
+                                  return null;
+                                },
+                                onDismissed: (direction) async {
                                   // else if (direction ==
                                   //     DismissDirection.endToStart) {
                                   //   //! Delete the UserDetails Based His Id
