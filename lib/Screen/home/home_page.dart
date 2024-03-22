@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:kodion_projects/Common/widget/error_page.dart';
 import 'package:kodion_projects/Screen/DataBase/database_helper.dart';
@@ -6,6 +7,7 @@ import 'package:kodion_projects/Screen/Home/Controller/home_provider.dart';
 import 'package:kodion_projects/Screen/Home/Widget/user_card_widget.dart';
 import 'package:kodion_projects/Screen/Profile/add_update_profile/add_update_user_page.dart';
 import 'package:kodion_projects/Screen/Profile/add_update_profile/controller/add_update_profile_provider.dart';
+import 'package:kodion_projects/Screen/google%20map/google_map_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -281,25 +283,62 @@ class _HomePageState extends State<HomePage> {
           ))
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: Colors.grey[100],
-        label: const Text("Create Details"),
-        onPressed: () {
-          Get.to(AddUpdateUserProfilePage(
-            userData: null,
-          ))!
-              .then((value) {
-            setState(() {
-              userListData = DataBaseHelper.dataBaseHelper.fetchUser();
-              item = userListData;
-            });
-            controller.nameController.value.clear();
-            controller.emailController.value.clear();
-            controller.numberController.value.clear();
-            controller.selectedItem.clear();
-            controller.dropdownvalue!.value = '';
-          });
-        },
+      // floatingActionButton: FloatingActionButton.extended(
+      //   backgroundColor: Colors.grey[100],
+      //   label: const Text("Create Details"),
+      //   onPressed: () {
+      //     Get.to(AddUpdateUserProfilePage(
+      //       userData: null,
+      //     ))!
+      //         .then((value) {
+      //       setState(() {
+      //         userListData = DataBaseHelper.dataBaseHelper.fetchUser();
+      //         item = userListData;
+      //       });
+      //       controller.nameController.value.clear();
+      //       controller.emailController.value.clear();
+      //       controller.numberController.value.clear();
+      //       controller.selectedItem.clear();
+      //       controller.dropdownvalue!.value = '';
+      //     });
+      //   },
+      // ),
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        useRotationAnimation: true,
+        childPadding: const EdgeInsets.all(5),
+        buttonSize: const Size(50, 50),
+        switchLabelPosition: false,
+        children: [
+          SpeedDialChild(
+            label: "Add User",
+            onTap: () {
+              Get.to(AddUpdateUserProfilePage(
+                userData: null,
+              ))!
+                  .then((value) {
+                setState(() {
+                  userListData = DataBaseHelper.dataBaseHelper.fetchUser();
+                  item = userListData;
+                });
+                controller.nameController.value.clear();
+                controller.emailController.value.clear();
+                controller.numberController.value.clear();
+                controller.selectedItem.clear();
+                controller.dropdownvalue!.value = '';
+              });
+            },
+            shape: const CircleBorder(),
+            child: const Icon(Icons.add),
+          ),
+          SpeedDialChild(
+              label: "Google Map",
+              shape: const CircleBorder(),
+              child: const Icon(Icons.share_location),
+              onTap: () {
+                Get.to(GoogleMapPage());
+              }),
+        ],
       ),
     );
   }
