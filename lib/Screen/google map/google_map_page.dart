@@ -1,4 +1,6 @@
+import 'package:custom_info_window/custom_info_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -23,37 +25,169 @@ class GoogleMapPage extends StatelessWidget {
                 decoration: const BoxDecoration(
                     // color: Colors.purple[50],
                     ),
-                child: Obx(
-                  () => GoogleMap(
-                    // mapType: MapType.hybrid,
-                    initialCameraPosition: googleProvider.cameraPosition,
-                    onMapCreated: (GoogleMapController controller) {
-                      print(googleProvider.cameraPosition);
-                      googleProvider.mapController.complete(controller);
-                    },
-                    myLocationEnabled: true,
-                    zoomControlsEnabled: true,
-                    myLocationButtonEnabled: true,
-                    polylines: googleProvider.drawpolyline,
-                    markers: {
-                      Marker(
-                        icon: BitmapDescriptor.defaultMarker,
-                        markerId: const MarkerId('userLocation'),
-                        position: LatLng(
-                          double.parse(
-                              googleProvider.userLat!.value.toString()),
-                          double.parse(
-                              googleProvider.userLng!.value.toString()),
+                child: Obx(() => Stack(
+                      children: [
+                        GoogleMap(
+                          // mapType: MapType.hybrid,
+                          initialCameraPosition: googleProvider.cameraPosition,
+                          onMapCreated: (GoogleMapController controller) {
+                            print(googleProvider.cameraPosition);
+                            googleProvider.mapController.complete(controller);
+                            googleProvider.customInfoWindowController
+                                .googleMapController = controller;
+                          },
+                          onTap: (position) {
+                            googleProvider
+                                .customInfoWindowController.hideInfoWindow!();
+                          },
+                          onCameraMove: (position) {
+                            googleProvider
+                                .customInfoWindowController.onCameraMove!();
+                          },
+                          myLocationEnabled: true,
+                          zoomControlsEnabled: true,
+                          myLocationButtonEnabled: true,
+                          polylines: {
+                            Polyline(
+                              polylineId: const PolylineId("route"),
+                              points: googleProvider.polyLineCordinate,
+                              color: Colors.red,
+                              width: 3,
+                            )
+                          },
+
+                          markers: {
+                            Marker(
+                                icon: BitmapDescriptor.defaultMarker,
+                                markerId: const MarkerId('userLocation'),
+                                position: LatLng(googleProvider.userLat!.value,
+                                    googleProvider.userLng!.value),
+                                onTap: () {
+                                  googleProvider.customInfoWindowController
+                                          .addInfoWindow!(
+                                      Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                              color: Colors.black,
+                                              width: 1,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                          ),
+                                          child: const Row(
+                                            children: [
+                                              Expanded(
+                                                child: Image(
+                                                  fit: BoxFit.fill,
+                                                  image: NetworkImage(
+                                                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS84JVXPQA4K6-W9qcYYgxbWUIEZiBMbKZ0KI1k5L1-Vg&s",
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "Kodion",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18),
+                                                  ),
+                                                  Text("Jr. Flutter Developer",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 16)),
+                                                  Text("Shivam Patel",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 16)),
+                                                ],
+                                              )
+                                            ],
+                                          )),
+                                      LatLng(googleProvider.userLat!.toDouble(),
+                                          googleProvider.userLng!.toDouble()));
+                                }),
+                            Marker(
+                              icon: BitmapDescriptor.defaultMarker,
+                              markerId: const MarkerId('dropLocation'),
+                              position: const LatLng(30.7008, 76.7127),
+                              onTap: () {
+                                googleProvider.customInfoWindowController
+                                        .addInfoWindow!(
+                                    Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                            color: Colors.black,
+                                            width: 1,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                        ),
+                                        // width: 500,
+                                        // height: 500,
+                                        child: const Row(
+                                          children: [
+                                            Expanded(
+                                              child: Image(
+                                                width: 120,
+                                                height: 200,
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(
+                                                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSVfNjMJsjy6yZFoAPFAhRMyl2SoHBy864KMirxgW0Hg&s",
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "Mattur",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18),
+                                                ),
+                                                Text("Dash Meash Atta Chakki",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontSize: 16)),
+                                                Text("Near ZimmiDara Dhaba",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontSize: 16)),
+                                              ],
+                                            )
+                                          ],
+                                        )),
+                                    const LatLng(30.7008, 76.7127));
+                              },
+                            ),
+                          },
                         ),
-                      ),
-                      const Marker(
-                        icon: BitmapDescriptor.defaultMarker,
-                        markerId: MarkerId('dropLocation'),
-                        position: LatLng(30.7008, 76.7127),
-                      ),
-                    },
-                  ),
-                )),
+                        CustomInfoWindow(
+                          controller: googleProvider.customInfoWindowController,
+                          height: 140,
+                          width: 300,
+                          offset: 40,
+                        ),
+                      ],
+                    ))),
           ),
           Expanded(
             flex: 1,
@@ -87,8 +221,8 @@ class GoogleMapPage extends StatelessWidget {
                     //! Get user Location Button ..
                     Expanded(
                       child: InkWell(
-                        onTap: () async {
-                          await googleProvider.animateToUserLOcation();
+                        onTap: () {
+                          googleProvider.animateToUserLOcation();
                         },
                         child: const CircleAvatar(
                           backgroundColor: Colors.white,
