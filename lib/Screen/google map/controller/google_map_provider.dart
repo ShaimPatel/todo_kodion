@@ -125,22 +125,22 @@ class GoogleMapProvider extends GetxController {
 
 //! Draw  the polyLine
 
-  // final Set<Polyline> drawpolyline = {};
+  final Set<Polyline> drawpolyline = {};
 
-  // void drawPolyLine() {
-  //   drawpolyline.add(
-  //     Polyline(
-  //       polylineId: const PolylineId("1"),
-  //       color: Colors.blue,
-  //       points: [
-  //         LatLng(double.parse(userLat!.value.toString()),
-  //             double.parse(userLng!.value.toString())),
-  //         const LatLng(30.7008, 76.7127),
-  //         const LatLng(30.710504, 76.712889),
-  //       ],
-  //     ),
-  //   );
-  // }
+  void drawPolyLine() {
+    drawpolyline.add(
+      Polyline(
+        polylineId: const PolylineId("1"),
+        color: Colors.blue,
+        points: [
+          LatLng(double.parse(userLat!.value.toString()),
+              double.parse(userLng!.value.toString())),
+          const LatLng(30.7008, 76.7127),
+          const LatLng(30.710504, 76.712889),
+        ],
+      ),
+    );
+  }
 
   //!onInit
 
@@ -152,7 +152,7 @@ class GoogleMapProvider extends GetxController {
     userLng = userLocationDetails.longitude.obs;
     addCustomMarker();
     print("User Location Details :: ${userLocationDetails.toString()}");
-    getPolyPoints();
+    drawPolyLine();
     super.onInit();
   }
 

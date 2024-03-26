@@ -47,15 +47,15 @@ class GoogleMapPage extends StatelessWidget {
                           myLocationEnabled: true,
                           zoomControlsEnabled: true,
                           myLocationButtonEnabled: true,
-                          polylines: {
-                            Polyline(
-                              polylineId: const PolylineId("route"),
-                              points: googleProvider.polyLineCordinate,
-                              color: Colors.red,
-                              width: 3,
-                            )
-                          },
-
+                          // polylines: {
+                          //   Polyline(
+                          //     polylineId: const PolylineId("route"),
+                          //     points: googleProvider.polyLineCordinate,
+                          //     color: Colors.red,
+                          //     width: 3,
+                          //   )
+                          // },
+                          polylines: googleProvider.drawpolyline,
                           markers: {
                             Marker(
                                 icon: BitmapDescriptor.defaultMarker,
@@ -178,6 +178,10 @@ class GoogleMapPage extends StatelessWidget {
                                     const LatLng(30.7008, 76.7127));
                               },
                             ),
+                            const Marker(
+                              markerId: MarkerId("3"),
+                              position: LatLng(30.710504, 76.712889),
+                            )
                           },
                         ),
                         CustomInfoWindow(
