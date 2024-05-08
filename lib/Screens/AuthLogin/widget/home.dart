@@ -4,18 +4,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kodion_projects/Apis/apis.dart';
+import 'package:kodion_projects/Screens/AuthLogin/auth_login.dart';
 import 'package:kodion_projects/Screens/AuthLogin/chat_user/chat_user.dart';
+import 'package:kodion_projects/Screens/AuthLogin/widget/profile_page.dart';
+import 'package:kodion_projects/Screens/comman/constant.dart';
 import 'package:kodion_projects/commonWidget/Text_Widget.dart';
 
 class HomePage extends StatelessWidget {
   GoogleSignIn googleSignIn = GoogleSignIn();
   var credential;
-  List<dynamic> list = [];
+  List<ClientData> list = [];
 
   HomePage({this.credential});
 
   @override
   Widget build(BuildContext context) {
+    print(credential);
     return WillPopScope(
       onWillPop: () {
         exit(0);
@@ -23,15 +27,23 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.teal.shade300,
-          leading: Container(
-            margin: EdgeInsets.all(6),
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 2)),
-            child: Icon(
-              Icons.person,
-              size: 30,
-              color: Colors.white,
+          leading: InkWell(
+            onTap: () {
+              /* Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProfilePage(credential)));*/
+            },
+            child: Container(
+              margin: EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2)),
+              child: Icon(
+                Icons.person,
+                size: 30,
+                color: Colors.white,
+              ),
             ),
           ),
           title: Textwidget(
@@ -48,7 +60,12 @@ class HomePage extends StatelessWidget {
               ),
               onPressed: () async {
                 await googleSignIn.signOut();
-                Navigator.pop(context);
+                Navigator.pushAndRemoveUntil(
+                    navigationKey.currentState!.context,
+                    MaterialPageRoute(
+                      builder: (context) => AuthLogin(),
+                    ),
+                    (route) => false);
               },
             ),
           ],
@@ -59,41 +76,47 @@ class HomePage extends StatelessWidget {
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
               case ConnectionState.none:
-                return CircularProgressIndicator();
+                return Center(child: CircularProgressIndicator());
               case ConnectionState.active:
               case ConnectionState.done:
                 if (snapshot.hasData) {
                   var data = snapshot.data.docs;
-                  list = data.map((e) {
-                        print(e.data());
-                        ClientData.fromJson(e.data());
-                      }).toList() ??
-                      [];
+
+                  list = data
+                      .map<ClientData>((e) => ClientData.fromJson(e.data()))
+                      .toList();
                 }
-                return list.isNotEmpty
-                    ? ListView.builder(
-                        itemCount: list.length,
-                        itemBuilder: (context, index) => Card(
-                              elevation: 1,
-                              color: Colors.white,
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  radius: 23,
-                                  backgroundImage:
-                                      NetworkImage(list[index].image),
-                                ),
-                                title: Text(
-                                  list[index].name,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                subtitle: Text(
-                                  list[index].message,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                ),
+                return ListView.builder(
+                    itemCount: list.length,
+                    itemBuilder: (context, index) => Card(
+                          elevation: 1,
+                          color: Colors.white,
+                          child: ListTile(
+                            leading: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProfilePage(list[index])));
+                              },
+                              child: CircleAvatar(
+                                radius: 23,
+                                backgroundImage:
+                                    NetworkImage(list[index].image),
                               ),
-                            ))
-                    : SizedBox();
+                            ),
+                            title: Text(
+                              list[index].name,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text(
+                              list[index].message,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                        ));
             }
           },
         ),

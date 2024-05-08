@@ -133,11 +133,20 @@ class _AuthLoginState extends State<AuthLogin> {
         load = false;
       });
       print(user);
-      Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => HomePage(credential: user)))
-          .then((value) => Navigator.pop(context));
+      if (await APIs.userExist()) {
+        print("User is Exist");
+        Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => HomePage(credential: user)))
+            .then((value) => Navigator.pop(context));
+      } else {
+        print("User is not Exist");
+        await APIs.createUser().then((value) => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomePage(credential: user))));
+      }
     } on Exception catch (e) {
       print("Google signing issue: $e");
       setState(() {
